@@ -63,8 +63,35 @@ func FindTvSeriesByName(name string) (*models.TvSeriesData, error) {
 	return nil , nil
 }
 
-func FindTvSeriesById() {
+func FindTvSeriesById(id string) (*models.TvSeriesData, error) {
+	db, err := sql.Open("mysql", getConnectionString())
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	defer db.Close()
 
+	record := &models.TvSeriesData{}
+	stmt := "SELECT id, name, year, language, folder_path, episodic FROM tbl_tv_series WHERE id = ?;"
+
+	rows, err := db.Query(stmt, id)
+	if err != nil {
+		print(err)
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		err = rows.Scan(&record.Id, &record.Name, &record.Year, &record.Language, &record.FolderPath, &record.Episodic)
+		if err != nil {
+			return nil, err
+		}
+
+		return record, nil
+	}
+
+	return nil , nil
 }
 
 func InsertRecords(data []models.TvSeriesData) error {

@@ -57,7 +57,7 @@ func TestInsertRecordSuccess(t *testing.T) {
 func TestInsertRecordsSuccess(t *testing.T) {
 
 	loadConfig(t)
-	if err := godotenv.Load("../../.env.test"); err != nil {
+	if err := godotenv.Load("../../test.env"); err != nil {
 		t.Error("Error loading .env file")
 		return
 	}
@@ -137,6 +137,44 @@ func TestFindTvSeriesByName_WithSingleResult(t *testing.T) {
 	})
 }
 
+func TestFindTvSeriesById_Fail(t *testing.T) {
+	id1 := uuid.New().String()
+	loadConfig(t)
+
+	res, err := FindTvSeriesById(id1)
+
+	if err != nil && res != nil {
+		t.Error(err)
+	}
+
+}
+
+func TestFindTvSeriesById_SingleResult(t *testing.T) {
+	id1 := uuid.New().String()
+	loadConfig(t)
+	InsertRecord(models.TvSeriesData{
+		Id:         id1,
+		Name:       "tester",
+		Year:       1965,
+		Language:   "English",
+		FolderPath: "/test",
+		Episodic:   true,
+	})
+	res, err := FindTvSeriesById(id1)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	if res.Id != id1 {
+		t.Error("Response does not match input!")
+	}
+
+	t.Cleanup(func() {
+		cleanUp()
+	})
+}
+
 func cleanUp() {
 
 	db, _ := sql.Open("mysql", getConnectionString())
@@ -149,7 +187,7 @@ func cleanUp() {
 }
 
 func loadConfig(t *testing.T) {
-	if err := godotenv.Load("../../.env.test"); err != nil {
+	if err := godotenv.Load("../../test.env"); err != nil {
 		t.Error("Error loading .env file")
 		return
 	}

@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -19,7 +20,17 @@ func BatchTvSeriesScanJob() {
 }
 
 func BatchRenameJob() {
+	files, err := SearchNewFiles()
 
+	if err != nil {
+		fmt.Println("No files found. Exiting Batch Job.")
+	}
+
+	if files != nil {
+		for _, file := range files {
+			log.Printf(file.Name())
+		}
+	}
 }
 
 
