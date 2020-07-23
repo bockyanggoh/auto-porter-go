@@ -5,15 +5,13 @@ import (
 	"database/sql"
 	"github.com/google/uuid"
 	"github.com/joho/godotenv"
+	"log"
 	"testing"
 )
 
 func TestInsertRecordSuccess(t *testing.T) {
+	loadConfig(t)
 
-	if err := godotenv.Load("../../.env.test"); err != nil {
-		t.Error("Error loading .env file")
-		return
-	}
 	seriesId := uuid.New().String()
 	fileId1 := uuid.New().String()
 	fileId2 := uuid.New().String();
@@ -58,6 +56,7 @@ func TestInsertRecordSuccess(t *testing.T) {
 
 func TestInsertRecordsSuccess(t *testing.T) {
 
+	loadConfig(t)
 	if err := godotenv.Load("../../.env.test"); err != nil {
 		t.Error("Error loading .env file")
 		return
@@ -95,13 +94,63 @@ func TestInsertRecordsSuccess(t *testing.T) {
 	})
 }
 
+func TestFindTvSeriesByName_NoResults(t *testing.T) {
+
+	loadConfig(t)
+	res , err := FindTvSeriesByName("test")
+	if err == nil && res == nil {
+		log.Print(err)
+		return
+	}
+
+	t.Error("Expected error to be thrown for no results!")
+
+	t.Cleanup(func() {
+		cleanUp()
+	})
+}
+
+func TestFindTvSeriesByName_WithSingleResult(t *testing.T) {
+	name :="peacan pie"
+	loadConfig(t)
+	recordId := uuid.New().String()
+	InsertRecord(models.TvSeriesData{
+		Id:         recordId,
+		Name:       name,
+		Year:       1965,
+		Language:   "English",
+		FolderPath: "/test",
+		Episodic:   true,
+	})
+	res, err := FindTvSeriesByName(name)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	if res.Name != name {
+		t.Error("Response does not match input!")
+	}
+
+	t.Cleanup(func() {
+		cleanUp()
+	})
+}
+
 func cleanUp() {
 
 	db, _ := sql.Open("mysql", getConnectionString())
 	defer db.Close()
 
-	db.Exec("truncate tbl_tv_series_files")
-	db.Exec("truncate tbl_tv_series")
+	db.Exec("delete from tbl_tv_series_files")
+	db.Exec("delete from tbl_tv_series")
 
 
+}
+
+func loadConfig(t *testing.T) {
+	if err := godotenv.Load("../../.env.test"); err != nil {
+		t.Error("Error loading .env file")
+		return
+	}
 }

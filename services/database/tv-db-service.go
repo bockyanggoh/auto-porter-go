@@ -32,13 +32,35 @@ func FindAllTvSeries() error {
 	return nil;
 }
 
-func FindTvSeriesByName(name string) {
-	//db, err := sql.Open("mysql", getConnectionString())
-	//if err != nil {
-	//	log.Println(err)
-	//	return err
-	//}
+func FindTvSeriesByName(name string) (*models.TvSeriesData, error) {
+	db, err := sql.Open("mysql", getConnectionString())
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	defer db.Close()
 
+	record := &models.TvSeriesData{}
+	stmt := "SELECT id, name, year, language, folder_path, episodic FROM tbl_tv_series WHERE name = ?;"
+
+	rows, err := db.Query(stmt, name)
+	if err != nil {
+		print(err)
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		err = rows.Scan(&record.Id, &record.Name, &record.Year, &record.Language, &record.FolderPath, &record.Episodic)
+		if err != nil {
+			return nil, err
+		}
+
+		return record, nil
+	}
+
+	return nil , nil
 }
 
 func FindTvSeriesById() {
@@ -51,34 +73,10 @@ func InsertRecords(data []models.TvSeriesData) error {
 		if err != nil {
 			log.Printf("Error inserting data for %v. Rollbacking back and terminating session.", v.Id)
 			rollbackData(v.Id)
-			return err;
+			return err
 		}
 	}
 	log.Printf("Successfully inserted %v records.", len(data))
-	return nil
-}
-
-func rollbackData(id string) error {
-	db, err := sql.Open("mysql", getConnectionString())
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	defer db.Close()
-
-	stmtFiles := "DELETE FROM porter_db.tbl_tv_series_files WHERE series_id = ?"
-	stmtSeries := "DELETE FROM porter_db.tbl_tv_series WHERE id = ?"
-	_, err = db.Exec(stmtFiles, id)
-
-	if err != nil {
-		return err
-	}
-	_, err = db.Exec(stmtSeries, id)
-
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -114,6 +112,27 @@ func InsertRecord(data models.TvSeriesData) error {
 	return nil
 }
 
+func rollbackData(id string) error {
+	db, err := sql.Open("mysql", getConnectionString())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	defer db.Close()
 
+	stmtFiles := "DELETE FROM porter_db.tbl_tv_series_files WHERE series_id = ?"
+	stmtSeries := "DELETE FROM porter_db.tbl_tv_series WHERE id = ?"
+	_, err = db.Exec(stmtFiles, id)
 
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(stmtSeries, id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
