@@ -34,13 +34,14 @@ jobs:
           name: Reality Tests
           command: |
             mv ci.env test.env
-            go test ./... -coverprofile=coverage.out
+            go test ./... -coverprofile=coverage.out -covermode=atomic
       - run:
           name: Upload Test Coverage Report
           command: |
             mkdir -p /tmp/test-results
             go tool cover -func=coverage.out
             go tool cover -html=coverage.out -o coverage.html
+            cat coverage.out > /tmp/test-results/coverage.txt
             mv coverage.out /tmp/test-results/coverage.out
             mv coverage.html /tmp/test-results/coverage.html
       - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
@@ -49,7 +50,7 @@ jobs:
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: /tmp/test-results
       - codecov/upload:
-          file: /tmp/test-results/coverage.html
+          file: /tmp/test-results/coverage.txt
 
 #  build:
 #    machine: true
