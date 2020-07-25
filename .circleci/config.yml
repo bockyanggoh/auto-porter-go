@@ -27,7 +27,7 @@ jobs:
           name: Install MySQL CLI, Setup Tables
           command: |
             sudo apt-get install default-mysql-client
-            mysql -h 127.0.0.1 -u user -ppassw0rd porter_db < sql/create_script.sql
+            mysql -h 127.0.0.1 -u app_user_test -ppassw0rd porter_db < sql/create_script.sql
       - run:
           name: Reality Tests
           command: |
