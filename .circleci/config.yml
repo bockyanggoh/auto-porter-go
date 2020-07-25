@@ -3,7 +3,8 @@ jobs:
   test:
     docker:
       - image: 'circleci/golang:latest'
-      - image: circleci/mysql:8.0.4
+      - image: circleci/mysql:latest
+        command: [--default-authentication-plugin=mysql_native_password]
         environment:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: porter_db
