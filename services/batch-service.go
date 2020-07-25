@@ -32,6 +32,3 @@ func BatchRenameJob() {
 		}
 	}
 }
-
-
-

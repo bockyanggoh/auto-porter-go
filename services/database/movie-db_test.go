@@ -47,7 +47,7 @@ func TestInsertMovieRecord_NoChild_Single(t *testing.T) {
 		t.Error("Count should be 1 after insertion!")
 	}
 	t.Cleanup(func() {
-		clearMovieDb()
+		clearDb([]string{"tbl_movie", "tbl_movie_files"})
 	})
 
 }
@@ -103,14 +103,9 @@ func TestInsertMovieRecord_WithChild_Single(t *testing.T) {
 		t.Error("Count should be 1 after insertion!")
 	}
 	t.Cleanup(func() {
-		clearMovieDb()
+		clearDb([]string{"tbl_movie", "tbl_movie_files"})
 	})
-
 }
 
-func clearMovieDb() {
-	db, _ := connectDb()
-	db.Exec("DELETE FROM tbl_movie_files;")
-	db.Exec("DELETE FROM tbl_movie;")
-	log.Println("Cleared all data from movies tables")
-}
+
+

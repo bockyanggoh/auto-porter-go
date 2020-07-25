@@ -7,7 +7,7 @@ import (
 )
 
 func getConnectionString() string {
-	conString := fmt.Sprintf("%s:%s@tcp(%s)/%s",
+	conString := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true",
 		os.Getenv("DB_USERNAME"),
 		os.Getenv("DB_PASSWORD"),
 		os.Getenv("DB_URL"),
