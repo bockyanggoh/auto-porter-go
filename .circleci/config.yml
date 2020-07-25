@@ -36,18 +36,18 @@ jobs:
       - run:
           name: Upload Test Coverage Report
           command: |
-            mkdir -p $CIRCLE_WORKING_DIRECTORY/test-results
+            mkdir -p /tmp/test-results
             go tool cover -func=coverage.out
             go tool cover -html=coverage.out -o coverage.html
-            mv coverage.out $CIRCLE_WORKING_DIRECTORY/test-results/coverage.out
-            mv coverage.html $CIRCLE_WORKING_DIRECTORY/test-results/coverage.html
+            mv coverage.out /tmp/test-results/coverage.out
+            mv coverage.html /tmp/test-results/coverage.html
             echo $CIRCLE_WORKING_DIRECTORY
             ls -lrta $CIRCLE_WORKING_DIRECTORY/test-results
       - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-          path: /home/circleci/project/test-results
+          path: /tmp/test-results
           destination: raw-test-output
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-          path: /home/circleci/project/test-results
+          path: /tmp/test-results
 
   build:
     machine: true
