@@ -32,13 +32,16 @@ jobs:
           name: Reality Tests
           command: |
             mv ci.env test.env
-            mkdir test-results
-            go test ./... -coverprofile=test-results/coverage.out
+            go test ./... -coverprofile=coverage.out
       - run:
           name: Upload Test Coverage Report
           command: |
-            go tool cover -func=test-results/coverage.out
-            go tool cover -html=test-results/coverage.out test-results/coverage.html
+            mkdir -p $CIRCLE_WORKING_DIRECTORY/test-results
+            pwd
+            go tool cover -func=coverage.out
+            go tool cover -html=coverage.out coverage.html
+            mv coverage.out $CIRCLE_WORKING_DIRECTORY/test-results/coverage.out
+            mv coverage.html $CIRCLE_WORKING_DIRECTORY/test-results/coverage.html
       - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: /tmp/test-results
           destination: raw-test-output
