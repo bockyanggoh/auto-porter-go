@@ -3,21 +3,10 @@ package database
 import (
 	"auto-porter-go/models"
 	"database/sql"
-	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
-	"os"
 )
 
-func getConnectionString() string {
-	conString := fmt.Sprintf("%s:%s@tcp(%s)/%s",
-		os.Getenv("DB_USERNAME"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_URL"),
-		os.Getenv("DB_NAME"));
-
-	return conString
-}
 
 func FindAllTvSeries() error {
 	db,err := sql.Open("mysql", getConnectionString())

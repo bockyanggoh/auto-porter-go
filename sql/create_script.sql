@@ -37,7 +37,6 @@ create table tbl_movie (
     year int not null ,
     language varchar(100) not null,
     folder_path varchar(255) not null ,
-    episodic bool not null default false,
     created_ts timestamp default current_timestamp ,
     updated_ts timestamp default current_timestamp
 );

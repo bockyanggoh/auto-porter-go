@@ -10,7 +10,7 @@ import (
 )
 
 func TestInsertRecordSuccess(t *testing.T) {
-	loadConfig(t)
+	LoadTestConfig(t)
 
 	seriesId := uuid.New().String()
 	fileId1 := uuid.New().String()
@@ -56,7 +56,7 @@ func TestInsertRecordSuccess(t *testing.T) {
 
 func TestInsertRecordsSuccess(t *testing.T) {
 
-	loadConfig(t)
+	LoadTestConfig(t)
 	if err := godotenv.Load("../../test.env"); err != nil {
 		t.Error("Error loading .env file")
 		return
@@ -96,7 +96,7 @@ func TestInsertRecordsSuccess(t *testing.T) {
 
 func TestFindTvSeriesByName_NoResults(t *testing.T) {
 
-	loadConfig(t)
+	LoadTestConfig(t)
 	res , err := FindTvSeriesByName("test")
 	if err == nil && res == nil {
 		log.Print(err)
@@ -112,7 +112,7 @@ func TestFindTvSeriesByName_NoResults(t *testing.T) {
 
 func TestFindTvSeriesByName_WithSingleResult(t *testing.T) {
 	name :="peacan pie"
-	loadConfig(t)
+	LoadTestConfig(t)
 	recordId := uuid.New().String()
 	InsertRecord(models.TvSeriesData{
 		Id:         recordId,
@@ -139,7 +139,7 @@ func TestFindTvSeriesByName_WithSingleResult(t *testing.T) {
 
 func TestFindTvSeriesById_Fail(t *testing.T) {
 	id1 := uuid.New().String()
-	loadConfig(t)
+	LoadTestConfig(t)
 
 	res, err := FindTvSeriesById(id1)
 
@@ -151,7 +151,7 @@ func TestFindTvSeriesById_Fail(t *testing.T) {
 
 func TestFindTvSeriesById_SingleResult(t *testing.T) {
 	id1 := uuid.New().String()
-	loadConfig(t)
+	LoadTestConfig(t)
 	InsertRecord(models.TvSeriesData{
 		Id:         id1,
 		Name:       "tester",
@@ -186,7 +186,7 @@ func cleanUp() {
 
 }
 
-func loadConfig(t *testing.T) {
+func LoadTestConfig(t *testing.T) {
 	if err := godotenv.Load("../../test.env"); err != nil {
 		t.Error("Error loading .env file")
 		return
