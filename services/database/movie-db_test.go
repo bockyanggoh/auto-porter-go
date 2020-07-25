@@ -15,7 +15,7 @@ func TestInsertMovieRecord_NoChild_Single(t *testing.T) {
 
 	record := models.MovieData{
 		Id:         uuid.New().String(),
-		TMDBId:     "1234",
+		TMDBId:     "1234567",
 		Name:       "test1",
 		Language:   "english",
 		FolderPath: "/test/path",
@@ -57,7 +57,7 @@ func TestInsertMovieRecord_WithChild_Single(t *testing.T) {
 
 	record := models.MovieData{
 		Id:         uuid.New().String(),
-		TMDBId:     "1234",
+		TMDBId:     "12345678111",
 		Name:       "test1",
 		Language:   "english",
 		FolderPath: "/test/path",
