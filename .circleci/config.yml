@@ -43,8 +43,6 @@ jobs:
             go tool cover -html=coverage.out -o coverage.html
             mv coverage.out /tmp/test-results/coverage.out
             mv coverage.html /tmp/test-results/coverage.html
-            echo $CIRCLE_WORKING_DIRECTORY
-            ls -lrta $CIRCLE_WORKING_DIRECTORY/test-results
       - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: /tmp/test-results
           destination: raw-test-output
