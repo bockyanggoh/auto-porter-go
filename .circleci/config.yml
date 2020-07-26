@@ -33,7 +33,7 @@ jobs:
       - run:
           name: Reality Tests
           command: |
-            export PROJECT_RELATIVE_FOLDER=${pwd}
+            export PROJECT_RELATIVE_FOLDER=$(pwd)
             ./scripts/test-prep-movie.sh
             mv ci.env test.env
             go test ./... -coverprofile=coverage.out -covermode=atomic
