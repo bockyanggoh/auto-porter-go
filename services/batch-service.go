@@ -20,7 +20,7 @@ func BatchRenameFiles() {
 }
 
 func BatchDownloadsScan() []*models.FileData  {
-	filePath := fmt.Sprintf("%s/downloads", os.Getenv("BASE_FOLDER"))
+	filePath := fmt.Sprintf("%s/%s/downloads", os.Getenv("PROJECT_RELATIVE_FOLDER"), os.Getenv("BASE_FOLDER"))
 	var targetList []*models.FileData
 	if fileList, err := searchVideoFiles(filePath); err == nil {
 		for _, file := range fileList {
@@ -40,7 +40,7 @@ func BatchDownloadsScan() []*models.FileData  {
 }
 
 func moveAndRename(info *models.FileData) error {
-	path := fmt.Sprintf("%s/apptemp", os.Getenv("BASE_FOLDER"))
+	path := fmt.Sprintf("%s/%s/apptemp", os.Getenv("PROJECT_RELATIVE_FOLDER"), os.Getenv("BASE_FOLDER"))
 	err := os.Mkdir(fmt.Sprintf("%s/%s", path, info.FormattedName), os.ModeDir)
 	if err != nil {
 		return err
