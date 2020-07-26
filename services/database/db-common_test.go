@@ -7,8 +7,6 @@ import (
 	"testing"
 )
 
-// Test Helper class. Do not write test here.
-
 func clearDb(list []string) {
 	db, _ := connectDb()
 	defer db.Close()
@@ -20,7 +18,8 @@ func clearDb(list []string) {
 	log.Printf("Cleared all data in the following tables: %v\n", list)
 }
 
-func LoadTestConfig(t *testing.T) {
+
+func loadTestConfig(t *testing.T) {
 	if err := godotenv.Load("../../test.env"); err != nil {
 		t.Error("Error loading .env file")
 		return

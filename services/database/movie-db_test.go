@@ -11,7 +11,7 @@ import (
 
 
 func TestInsertMovieRecord_NoChild_Single(t *testing.T) {
-	LoadTestConfig(t)
+	loadTestConfig(t)
 
 	record := models.MovieData{
 		Id:         uuid.New().String(),
@@ -53,7 +53,7 @@ func TestInsertMovieRecord_NoChild_Single(t *testing.T) {
 }
 
 func TestInsertMovieRecord_WithChild_Single(t *testing.T) {
-	LoadTestConfig(t)
+	loadTestConfig(t)
 
 	record := models.MovieData{
 		Id:         uuid.New().String(),

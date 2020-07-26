@@ -7,7 +7,7 @@ import (
 )
 
 func TestInsertBatchLog(t *testing.T) {
-	LoadTestConfig(t)
+	loadTestConfig(t)
 	startTime := time.Now()
 	endTime := startTime.Local().Add(time.Minute * 2)
 	record := models.BatchLogData{
@@ -36,7 +36,7 @@ func TestInsertBatchLog(t *testing.T) {
 
 func TestFindBatchLogByTypeAndLastExecuted(t *testing.T) {
 	timeFormat := "StampMilli"
-	LoadTestConfig(t)
+	loadTestConfig(t)
 	startTime1 := time.Now()
 	endTime1 := time.Now().Add(time.Minute *1)
 	startTime2 := endTime1
