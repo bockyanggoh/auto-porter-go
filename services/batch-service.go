@@ -21,6 +21,7 @@ func BatchRenameFiles() {
 
 func BatchDownloadsScan() []*models.FileData  {
 	filePath := fmt.Sprintf("%s/%s/downloads", os.Getenv("PROJECT_RELATIVE_FOLDER"), os.Getenv("BASE_FOLDER"))
+	log.Printf("Scanning folder for downloads: %v\n", filePath)
 	var targetList []*models.FileData
 	if fileList, err := searchVideoFiles(filePath); err == nil {
 		for _, file := range fileList {
