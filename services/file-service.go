@@ -2,7 +2,6 @@ package services
 
 import (
 	"auto-porter-go/models"
-	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -11,14 +10,13 @@ import (
 var videoTypes = []string{".mkv", ".avi", "mp4", ".webM", ".rmvb"}
 
 func searchVideoFiles(folder string) ([]*models.FileData, error) {
-
 	r, _ := regexp.Compile(`^(\.mp4|\.mkv|\.|\.avi|\.webM|\.rmvb)$`)
 	var fileList []*models.FileData
-	filepath.Walk(folder, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(folder, func(path string, info os.FileInfo, err error) error {
 		ext := filepath.Ext(filepath.Join(path, info.Name()))
 		if !info.IsDir() && r.MatchString(ext) {
 			fData := models.FileData{
-				FullPath:  fmt.Sprintf("%s/%s", path, info.Name()),
+				FullPath:  path,
 				Name:      info.Name(),
 				Extension: ext,
 				Folder:    path,
@@ -30,19 +28,11 @@ func searchVideoFiles(folder string) ([]*models.FileData, error) {
 		return nil
 	})
 
+	if err != nil {
+		return nil, err
+	}
+
 	return fileList, nil
-}
-
-func renameTVFile(completion chan bool) {
-
-}
-
-func renameMovieFile(completion chan bool) {
-
-}
-
-func renameAnimeFile(completion chan bool) {
-
 }
 
 func contains(s []string, e string) bool {

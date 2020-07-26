@@ -15,3 +15,8 @@ func TestBatchDownloadsScan(t *testing.T) {
 		t.Error("Output is nil!")
 	}
 }
+
+func TestBatchRenameFiles(t *testing.T) {
+	loadTestConfig(t)
+	BatchRenameFiles()
+}

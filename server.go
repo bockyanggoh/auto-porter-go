@@ -1,6 +1,7 @@
 package main
 
 import (
+	"auto-porter-go/services"
 	_ "github.com/joho/godotenv/autoload"
 )
 func main() {
@@ -16,4 +17,5 @@ func main() {
 	//log.Print("Started Listening at http://localhost"+port)
 
 	//services.BatchTvSeriesScanJob()
+	services.BatchRenameFiles()
 }

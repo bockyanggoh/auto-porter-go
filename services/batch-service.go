@@ -14,7 +14,9 @@ import (
 
 func BatchRenameFiles() {
 	if files := BatchDownloadsScan(); files != nil {
-
+		for _, f := range files {
+			moveAndRename(f)
+		}
 	}
 
 }
@@ -28,7 +30,6 @@ func BatchDownloadsScan() []*models.FileData  {
 			if strings.Count(file.Name, ".") > 1 {
 				file.FormattedName = generateNewFileName(file)
 				targetList = append(targetList, file)
-				log.Printf("Before: %v, After: %v\n",file.Name, file.FormattedName)
 			} else {
 				log.Printf("%v does not fulfill requirements for automatic rename.\n", file.Name)
 			}
@@ -41,12 +42,49 @@ func BatchDownloadsScan() []*models.FileData  {
 }
 
 func moveAndRename(info *models.FileData) error {
+	log.Println("Renaming files...")
 	path := fmt.Sprintf("%s/%s/apptemp", os.Getenv("PROJECT_RELATIVE_FOLDER"), os.Getenv("BASE_FOLDER"))
-	err := os.Mkdir(fmt.Sprintf("%s/%s", path, info.FormattedName), os.ModeDir)
+
+	oldPath := fmt.Sprintf("%s", info.FullPath)
+	newPath := fmt.Sprintf("%s/%s%s", path, info.FormattedName, info.Extension)
+
+	log.Printf("oldPath: %v", oldPath)
+	log.Printf("newPath: %v", newPath)
+	err := os.Rename(oldPath, newPath)
 	if err != nil {
+		log.Println(err)
+		log.Println("Failed to move files.")
 		return err
 	}
+	moviePath := fmt.Sprintf("%s/%s/movies/%s", os.Getenv("PROJECT_RELATIVE_FOLDER"), os.Getenv("BASE_FOLDER"), info.FormattedName)
+	log.Println(moviePath)
+	if _, err := os.Stat(moviePath); os.IsNotExist(err) {
+		//Path does not exist, lets continue.
+		if err = os.Mkdir(moviePath, 0700); err != nil {
+			log.Println(err)
+			return nil
+		}
+		finalLoc := fmt.Sprintf("%s/%s%s", moviePath, info.FormattedName, info.Extension)
+		log.Println(finalLoc)
+		err = os.Rename(newPath, finalLoc)
+		if err != nil {
+			log.Println(err)
+			log.Println("Failed to move file. Moving file to others for manual intervention.")
+			moveFailureToOthers()
+		} else {
+			log.Println("Completed rename job. Exiting.")
+			return nil
+		}
+	}
+
 	return nil
+}
+
+func moveFailureToOthers() {
+
+}
+
+func deleteShellFolders() {
 }
 
 func generateNewFileName(file *models.FileData) string {
@@ -55,24 +93,11 @@ func generateNewFileName(file *models.FileData) string {
 		matched, _ := regexp.MatchString(`^\d{4}$`, part)
 		if matched {
 			newFileName = fmt.Sprintf("%s (%s)", newFileName, part)
+			newFileName = strings.Trim(newFileName, " ")
 			return newFileName
 		} else {
 			newFileName = fmt.Sprintf("%s %s", newFileName, part)
 		}
 	}
-
 	return ""
 }
-//func BatchRenameJob() {
-//	files, err := SearchNewFiles()
-//
-//	if err != nil {
-//		fmt.Println("No files found. Exiting Batch Job.")
-//	}
-//
-//	if files != nil {
-//		for _, file := range files {
-//			log.Printf(file.Name())
-//		}
-//	}
-//}
