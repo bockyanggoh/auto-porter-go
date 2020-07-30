@@ -60,7 +60,7 @@ func moveAndRename(info *models.FileData) error {
 	log.Println(moviePath)
 	if _, err := os.Stat(moviePath); os.IsNotExist(err) {
 		//Path does not exist, lets continue.
-		if err = os.Mkdir(moviePath, 0700); err != nil {
+		if err = os.Mkdir(moviePath, 0777); err != nil {
 			log.Println(err)
 			return nil
 		}
